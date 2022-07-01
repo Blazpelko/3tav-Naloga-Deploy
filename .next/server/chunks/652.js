@@ -114,14 +114,48 @@ const elementi = [
 const CreateCard = ({ childToParent  })=>{
     const { 0: items , 1: setItems  } = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([]);
     function addItem(element) {
-        setItems([
-            ...items,
-            element
-        ]);
+        // setItems([...items,element]);
+        if (items.length > 0) {
+            // let iskani=_.find(items, function(o) { return o.product.id===element.id;});
+            let objIndex = items.findIndex((obj)=>obj.product.id === element.id);
+            if (objIndex === -1) {
+                setItems([
+                    ...items,
+                    {
+                        product: element,
+                        st: 1
+                    }
+                ]);
+            } else {
+                items[objIndex].st = items[objIndex].st + 1;
+                setItems([
+                    ...items
+                ]);
+            }
+        } else {
+            setItems([
+                {
+                    product: element,
+                    st: 1
+                }
+            ]);
+        }
+        console.log("Added: ", items);
     }
     function removeItem(element) {
-        let temp = items.filter((i)=>i !== element);
-        setItems(temp);
+        // let temp=items.filter((i) => i !== element)
+        // setItems(temp);
+        if (items.length > 0) {
+            let objIndex = items.findIndex((obj)=>obj.product.id === element.id);
+            items[objIndex].st = items[objIndex].st - 1;
+            if (items[objIndex].st <= 0) {
+                items.splice(objIndex, 1);
+            }
+            setItems([
+                ...items
+            ]);
+        }
+        console.log("Removed: ", items);
     }
     //Vprašaj za tale useEffect ali je vredu!!
     (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(()=>{
@@ -142,14 +176,21 @@ const CreateCard = ({ childToParent  })=>{
                                 /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(semantic_ui_react__WEBPACK_IMPORTED_MODULE_2__.Card.Header, {
                                     children: element.id
                                 }),
+                                /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(semantic_ui_react__WEBPACK_IMPORTED_MODULE_2__.Card.Description, {
+                                    children: element.value
+                                }),
                                 /*#__PURE__*/ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(semantic_ui_react__WEBPACK_IMPORTED_MODULE_2__.Card.Meta, {
                                     children: [
                                         element.cena,
                                         "$"
                                     ]
                                 }),
-                                /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(semantic_ui_react__WEBPACK_IMPORTED_MODULE_2__.Card.Description, {
-                                    children: element.value
+                                /*#__PURE__*/ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("p", {
+                                    className: "right floated",
+                                    children: [
+                                        "Koli\u010Dina: ",
+                                        items.findIndex((obj)=>obj.product.id === element.id) === -1 ? 0 : items[items.findIndex((obj)=>obj.product.id === element.id)].st
+                                    ]
                                 })
                             ]
                         }),
@@ -159,14 +200,14 @@ const CreateCard = ({ childToParent  })=>{
                                 className: "ui two buttons",
                                 children: [
                                     /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(semantic_ui_react__WEBPACK_IMPORTED_MODULE_2__.Button, {
-                                        disabled: items.some((i)=>i === element),
+                                        // disabled={items.some((i) => i === element)}
                                         primary: true,
                                         color: "green",
                                         onClick: ()=>addItem(element),
                                         children: "Dodaj v ko\u0161arico"
                                     }),
                                     /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(semantic_ui_react__WEBPACK_IMPORTED_MODULE_2__.Button, {
-                                        disabled: !items.some((i)=>i === element),
+                                        disabled: !items.some((i)=>i.product === element),
                                         color: "red",
                                         onClick: ()=>removeItem(element),
                                         children: "Odstrani"

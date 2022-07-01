@@ -1,5 +1,6 @@
-import { Form, Segment, Grid } from "semantic-ui-react";
+import { Form, Segment, Grid,Dropdown } from "semantic-ui-react";
 import { useState } from "react";
+const _ = require("lodash");
 
 const countryOptions = [
   { key: "af", value: "af", flag: "af", text: "Afghanistan" },
@@ -29,6 +30,7 @@ const countryOptions = [
 
 //test
 const SubmitForm = (selectedItems) => {
+  const [eleKosarica,setEleKosarica]=useState(selectedItems.selectedItems);
   const [
     {
       name,
@@ -52,10 +54,33 @@ const SubmitForm = (selectedItems) => {
     submittedCountry: ""
   });
 
+  const [sort,setSort]=useState("red");
+
+  const handleSortType = (event,data) =>{
+    switch(data.value){
+      case "ime":
+        setEleKosarica(_.sortBy(eleKosarica,[function(o) { return o.product.id; }]));
+        break;
+      case "cenaIzdelek":
+        setEleKosarica(_.sortBy(eleKosarica,[function(o) { return o.product.cena; }]));
+        break;
+      case "cenaSkupna":
+        setEleKosarica(_.sortBy(eleKosarica,[function(o) { return o.product.cena*o.st }]));
+        break;
+      default:
+        setEleKosarica(selectedItems.selectedItems);
+        break;
+    }
+    setSort(data.value);
+    console.log(data.value);
+  }
+
+  // ime,red,cenaIzdelek,cenaSkupna
+
   function cena() {
     let sum = 0;
     selectedItems.selectedItems.forEach(function (i) {
-      sum += i.cena;
+      sum += i.product.cena*i.st;
     });
     return sum;
   }
@@ -166,11 +191,32 @@ const SubmitForm = (selectedItems) => {
               <p>V košarici ni elementov </p>
             ) : (
               <div>
-                <p>V košarici so elementi:</p>
-                {(typeof selectedItems.selectedItems !== 'undefined') &&selectedItems.selectedItems.map((temp) => (
-                  <p key={temp.id}>
-                    {temp.id} | <strong>{temp.cena} $ </strong>
-                  </p>
+                <h2>Vsebina košarice</h2>
+                <Dropdown
+                  className="right floated"
+                  placeholder="Sort by"
+                  options={[
+                    { key: "red", value: "red" ,text: "Po vrstnem redu" },
+                    { key: "ime", value: "ime" ,text: "Po imenu" },
+                    { key: "cenaIzdelek", value: "cenaIzdelek" ,text: "Po ceni" },
+                    { key: "cenaSkupna", value: "cenaSkupna" ,text: "Po skupni ceni" }
+                  ]}
+                  value={sort}
+                  onChange={handleSortType}
+                />
+                <div className="ui divider"></div>
+                <div className="ui grid">
+                    <div className="six wide column"><strong>Produkt</strong></div>
+                    <div className="six wide column"><strong>Cena</strong></div>
+                    <div className="four wide column"><strong>Količina</strong></div>
+                </div>
+                <div className="ui divider"></div>
+                {(typeof selectedItems.selectedItems !== 'undefined') &&eleKosarica.map((temp) => ( 
+                  <div className="ui grid">
+                    <div className="six wide column">{temp.product.id}</div>
+                    <div className="six wide column">{temp.product.cena} $</div>
+                    <div className="four wide column">{temp.st}</div>
+                  </div>
                 ))}
               </div>
             )}

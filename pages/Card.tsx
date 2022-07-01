@@ -26,12 +26,34 @@ const CreateCard = ({ childToParent }) => {
   const [items, setItems] = useState([]);
   
   function addItem(element) {
-    setItems([...items,element]);
+    // setItems([...items,element]);
+    if(items.length>0){
+      // let iskani=_.find(items, function(o) { return o.product.id===element.id;});
+      let objIndex = items.findIndex((obj => obj.product.id === element.id));
+      if(objIndex===-1){
+        setItems([...items,{product:element,st:1}]);
+      }else{
+        items[objIndex].st=items[objIndex].st+1;
+        setItems([...items]);
+      }
+    }else{
+      setItems([{product:element,st:1}]);
+    }
+    console.log("Added: ",items);
   }
 
   function removeItem(element) {
-    let temp=items.filter((i) => i !== element)
-    setItems(temp);
+    // let temp=items.filter((i) => i !== element)
+    // setItems(temp);
+    if(items.length>0){
+      let objIndex = items.findIndex((obj => obj.product.id === element.id));
+      items[objIndex].st=items[objIndex].st-1;
+      if(items[objIndex].st<=0){
+        items.splice(objIndex,1);
+      }
+      setItems([...items]);
+    }
+    console.log("Removed: ",items);
   }
 
   //Vprašaj za tale useEffect ali je vredu!!
@@ -46,13 +68,14 @@ const CreateCard = ({ childToParent }) => {
           <Card key={element.id}>
             <Card.Content>
               <Card.Header>{element.id}</Card.Header>
-              <Card.Meta>{element.cena}$</Card.Meta>
               <Card.Description>{element.value}</Card.Description>
+              <Card.Meta>{element.cena}$</Card.Meta>
+              <p className="right floated">Količina: {(items.findIndex((obj => obj.product.id === element.id))) === -1 ? 0 : items[items.findIndex((obj => obj.product.id === element.id))].st}</p>
             </Card.Content>
             <Card.Content extra>
               <div className="ui two buttons">
                 <Button
-                  disabled={items.some((i) => i === element)}
+                  // disabled={items.some((i) => i === element)}
                   primary
                   color="green"
                   onClick={()=>addItem(element)}
@@ -60,7 +83,7 @@ const CreateCard = ({ childToParent }) => {
                   Dodaj v košarico
                 </Button>
                 <Button
-                  disabled={!items.some((i) => i === element)}
+                  disabled={!items.some((i) => i.product === element)}
                   color="red"
                   onClick={() => removeItem(element)}
                 >

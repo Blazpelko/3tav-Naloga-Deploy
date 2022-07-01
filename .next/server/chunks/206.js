@@ -19,6 +19,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+const _ = __webpack_require__(517);
 const countryOptions = [
     {
         key: "af",
@@ -161,6 +162,7 @@ const countryOptions = [
 ];
 //test
 const SubmitForm = (selectedItems)=>{
+    const { 0: eleKosarica , 1: setEleKosarica  } = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(selectedItems.selectedItems);
     const { 0: { name , email , address , country , submittedName , submittedEmail , submittedAddress , submittedCountry  } , 1: setParams  } = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)({
         name: "",
         email: "",
@@ -171,10 +173,42 @@ const SubmitForm = (selectedItems)=>{
         submittedAddress: "",
         submittedCountry: ""
     });
+    const { 0: sort , 1: setSort  } = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)("red");
+    const handleSortType = (event, data)=>{
+        switch(data.value){
+            case "ime":
+                setEleKosarica(_.sortBy(eleKosarica, [
+                    function(o) {
+                        return o.product.id;
+                    }
+                ]));
+                break;
+            case "cenaIzdelek":
+                setEleKosarica(_.sortBy(eleKosarica, [
+                    function(o) {
+                        return o.product.cena;
+                    }
+                ]));
+                break;
+            case "cenaSkupna":
+                setEleKosarica(_.sortBy(eleKosarica, [
+                    function(o) {
+                        return o.product.cena * o.st;
+                    }
+                ]));
+                break;
+            default:
+                setEleKosarica(selectedItems.selectedItems);
+                break;
+        }
+        setSort(data.value);
+        console.log(data.value);
+    };
+    // ime,red,cenaIzdelek,cenaSkupna
     function cena() {
         let sum = 0;
         selectedItems.selectedItems.forEach(function(i) {
-            sum += i.cena;
+            sum += i.product.cena * i.st;
         });
         return sum;
     }
@@ -319,21 +353,86 @@ const SubmitForm = (selectedItems)=>{
                                 children: "V ko\u0161arici ni elementov "
                             }) : /*#__PURE__*/ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
                                 children: [
-                                    /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("p", {
-                                        children: "V ko\u0161arici so elementi:"
+                                    /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("h2", {
+                                        children: "Vsebina ko\u0161arice"
                                     }),
-                                    typeof selectedItems.selectedItems !== "undefined" && selectedItems.selectedItems.map((temp)=>/*#__PURE__*/ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("p", {
+                                    /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(semantic_ui_react__WEBPACK_IMPORTED_MODULE_1__.Dropdown, {
+                                        className: "right floated",
+                                        placeholder: "Sort by",
+                                        options: [
+                                            {
+                                                key: "red",
+                                                value: "red",
+                                                text: "Po vrstnem redu"
+                                            },
+                                            {
+                                                key: "ime",
+                                                value: "ime",
+                                                text: "Po imenu"
+                                            },
+                                            {
+                                                key: "cenaIzdelek",
+                                                value: "cenaIzdelek",
+                                                text: "Po ceni"
+                                            },
+                                            {
+                                                key: "cenaSkupna",
+                                                value: "cenaSkupna",
+                                                text: "Po skupni ceni"
+                                            }
+                                        ],
+                                        value: sort,
+                                        onChange: handleSortType
+                                    }),
+                                    /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("div", {
+                                        className: "ui divider"
+                                    }),
+                                    /*#__PURE__*/ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                                        className: "ui grid",
+                                        children: [
+                                            /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("div", {
+                                                className: "six wide column",
+                                                children: /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("strong", {
+                                                    children: "Produkt"
+                                                })
+                                            }),
+                                            /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("div", {
+                                                className: "six wide column",
+                                                children: /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("strong", {
+                                                    children: "Cena"
+                                                })
+                                            }),
+                                            /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("div", {
+                                                className: "four wide column",
+                                                children: /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("strong", {
+                                                    children: "Koli\u010Dina"
+                                                })
+                                            })
+                                        ]
+                                    }),
+                                    /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("div", {
+                                        className: "ui divider"
+                                    }),
+                                    typeof selectedItems.selectedItems !== "undefined" && eleKosarica.map((temp)=>/*#__PURE__*/ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                                            className: "ui grid",
                                             children: [
-                                                temp.id,
-                                                " | ",
-                                                /*#__PURE__*/ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("strong", {
+                                                /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("div", {
+                                                    className: "six wide column",
+                                                    children: temp.product.id
+                                                }),
+                                                /*#__PURE__*/ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                                                    className: "six wide column",
                                                     children: [
-                                                        temp.cena,
-                                                        " $ "
+                                                        temp.product.cena,
+                                                        " $"
                                                     ]
+                                                }),
+                                                /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("div", {
+                                                    className: "four wide column",
+                                                    children: temp.st
                                                 })
                                             ]
-                                        }, temp.id))
+                                        }))
                                 ]
                             })
                         }),

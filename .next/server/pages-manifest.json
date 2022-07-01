@@ -3,8 +3,8 @@
   "/_error": "pages/_error.js",
   "/Card": "pages/Card.html",
   "/Menu": "pages/Menu.html",
-  "/": "pages/index.html",
   "/form": "pages/form.html",
+  "/": "pages/index.html",
   "/test": "pages/test.html",
   "/_document": "pages/_document.js",
   "/404": "pages/404.html"

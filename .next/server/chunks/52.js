@@ -85,6 +85,7 @@ const MainMenu = ()=>{
         children: [
             /*#__PURE__*/ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(semantic_ui_react__WEBPACK_IMPORTED_MODULE_2__.Menu, {
                 pointing: true,
+                className: "red inverted ",
                 children: [
                     /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(semantic_ui_react__WEBPACK_IMPORTED_MODULE_2__.Menu.Item, {
                         name: "izdelki",

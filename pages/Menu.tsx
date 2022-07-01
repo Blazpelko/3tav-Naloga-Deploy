@@ -54,7 +54,7 @@ const MainMenu = () => {
 
   return (
     <div>
-      <Menu pointing>
+      <Menu pointing className="red inverted ">
         <Menu.Item
           name="izdelki"
           active={activeItem === "izdelki"}
